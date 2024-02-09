@@ -1,6 +1,5 @@
 package enaapackage;
-
-class Book {
+public class Book {
     private String title;
     private String author;
     private String isbn;
@@ -12,6 +11,22 @@ class Book {
         this.author = author;
         this.isbn = isbn;
         this.publicationDate = publicationDate;
+        this.borrower = null;
+    }
+
+    public void updateDetails(String title, String author, String isbn, String publicationDate) {
+        if (title != null) {
+            this.title = title;
+        }
+        if (author != null) {
+            this.author = author;
+        }
+        if (isbn != null) {
+            this.isbn = isbn;
+        }
+        if (publicationDate != null) {
+            this.publicationDate = publicationDate;
+        }
     }
 
     public String getTitle() {
@@ -36,5 +51,10 @@ class Book {
 
     public void setBorrower(Student borrower) {
         this.borrower = borrower;
+    }
+
+    @Override
+    public String toString() {
+        return "Title: " + title + ", Author: " + author + ", ISBN: " + isbn + ", Publication Date: " + publicationDate;
     }
 }

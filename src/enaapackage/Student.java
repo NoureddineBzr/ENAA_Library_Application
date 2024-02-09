@@ -1,41 +1,53 @@
 package enaapackage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
-class Student {
-    private String nom;
-    private String adresse;
-    private String id;
-    private List<Book> livresEmpruntes;
 
-    public Student(String nom, String adresse, String id) {
-        this.nom = nom;
-        this.adresse = adresse;
-        this.id = id;
-        this.livresEmpruntes = new ArrayList<>();
+public class Student {
+    private String name;
+    private String address;
+    private String studentId;
+    private List<Book> borrowedBooks;
+
+    public Student(String name, String address, String studentId) {
+        this.name = name;
+        this.address = address;
+        this.studentId = studentId;
+        this.borrowedBooks = new ArrayList<>();
     }
 
-    public String getNom() {
-        return nom;
+    public String getName() {
+        return name;
     }
 
-    public String getAdresse() {
-        return adresse;
+    public String getAddress() {
+        return address;
     }
 
-    public String getId() {
-        return id;
+    public String getStudentId() {
+        return studentId;
     }
 
-    public List<Book> getLivresEmpruntes() {
-        return livresEmpruntes;
+    public List<Book> getBorrowedBooks() {
+        return borrowedBooks;
     }
 
-    public void emprunterLivre(Book livre) {
-        livresEmpruntes.add(livre);
-        livre.setBorrower(this);
+    public void borrowBook(Book book) {
+        borrowedBooks.add(book);
     }
 
-    public void retournerLivre(Book livre) {
-        livresEmpruntes.remove(livre);
-        livre.setBorrower(null);
+    public void returnBook(Book book) {
+        borrowedBooks.remove(book);
+    }
+
+    @Override
+    public String toString() {
+        return "Name: " + name + ", Address: " + address + ", Student ID: " + studentId;
     }
 }
+
+
+
+
+
