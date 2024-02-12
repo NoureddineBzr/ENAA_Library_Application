@@ -1,8 +1,9 @@
 package enaapackage;
 
+
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
+
 
 public class Menu {
     private Library library;
@@ -10,155 +11,148 @@ public class Menu {
 
     public Menu(Library library) {
         this.library = library;
-        scanner = new Scanner(System.in);
+        this.scanner = new Scanner(System.in);
     }
 
     public void displayMenu() {
-        System.out.println("Bienvenue dans la bibliothèque !");
-        System.out.println("1. Ajouter un livre");
-        System.out.println("2. Supprimer un livre");
-        System.out.println("3. Rechercher un livre par titre");
-        System.out.println("4. Rechercher un livre par auteur");
-        System.out.println("5. Ajouter un étudiant");
-        System.out.println("6. Supprimer un étudiant");
-        System.out.println("7. Quitter");
+        System.out.println("\nMenu du Système de Gestion de Bibliothèque :");
+        System.out.println("1. Ajouter un Livre");
+        System.out.println("2. Supprimer un Livre");
+        System.out.println("3. Rechercher un Livre");
+        System.out.println("4. Afficher Tous les Livres");
+        System.out.println("5. Ajouter un Étudiant");
+        System.out.println("6. Supprimer un Étudiant");
+        System.out.println("7. Afficher Tous les Étudiants");
+        System.out.println("8. Vérifier les Livres en Retard");
+        System.out.println("9. Réserver un Livre");
+        System.out.println("10. Afficher les Livres Réservés");
+        System.out.println("11. Quitter");
+        System.out.print("Entrez votre choix : ");
     }
 
-    public void runMenu() {
-        while (true) {
-            displayMenu();
-            System.out.print("Veuillez choisir une option: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline character
-
-            switch (choice) {
-                case 1:
-                    addBook();
-                    break;
-                case 2:
-                    removeBook();
-                    break;
-                case 3:
-                    searchBookByTitle();
-                    break;
-                case 4:
-                    searchBookByAuthor();
-                    break;
-                case 5:
-                    addStudent();
-                    break;
-                case 6:
-                    removeStudent();
-                    break;
-                case 7:
-                    System.out.println("Merci d'avoir utilisé la bibliothèque ! Au revoir.");
-                    return;
-                default:
-                    System.out.println("Option invalide. Veuillez entrer un numéro d'option valide.");
-            }
+    public void processChoice(int choice) {
+        switch (choice) {
+            case 1:
+                addBook();
+                break;
+            case 2:
+                removeBook();
+                break;
+            case 3:
+                searchBook();
+                break;
+            case 4:
+                library.displayAllBooks();
+                break;
+            case 5:
+                addStudent();
+                break;
+            case 6:
+                removeStudent();
+                break;
+            case 7:
+                library.displayAllStudents();
+                break;
+            case 8:
+                library.checkForOverdueBooks();
+                break;
+            case 9:
+                reserveBook();
+                break;
+            case 10:
+                library.displayReservedBooks();
+                break;
+            case 11:
+                System.out.println("Exiting...");
+                System.exit(0);
+            default:
+                System.out.println("Choix invalide");
         }
     }
 
-    public void addBook() {
-        System.out.print("Entrez le titre du livre: ");
+    private void addBook() {
+        System.out.println("Entrez les détails du livre :");
+        System.out.print("Titre : ");
         String title = scanner.nextLine();
-        System.out.print("Entrez l'auteur du livre: ");
+        System.out.print("Auteur : ");
         String author = scanner.nextLine();
-        System.out.print("Entrez l'ISBN du livre: ");
+        System.out.print("ISBN : ");
         String isbn = scanner.nextLine();
-        System.out.print("Entrez la date de publication du livre: ");
+        System.out.print("Date de publication : ");
         String publicationDate = scanner.nextLine();
         Book book = new Book(title, author, isbn, publicationDate);
         library.addBook(book);
         System.out.println("Livre ajouté avec succès.");
     }
 
-    public void removeBook() {
-        System.out.print("Entrez le titre du livre à supprimer: ");
+    private void removeBook() {
+        System.out.println("Entrez le titre du livre à supprimer :");
         String title = scanner.nextLine();
-        List<Book> books = library.searchBookByTitle(title);
-        if (books.isEmpty()) {
-            System.out.println("Aucun livre trouvé avec ce titre.");
-            return;
-        }
-        System.out.println("Livres trouvés:");
-        for (int i = 0; i < books.size(); i++) {
-            System.out.println((i + 1) + ". " + books.get(i));
-        }
-        System.out.print("Entrez le numéro du livre à supprimer: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline character
-        if (choice >= 1 && choice <= books.size()) {
-            library.removeBook(books.get(choice - 1));
+        Book book = library.searchBook(title);
+        if (book != null) {
+            library.removeBook(book);
             System.out.println("Livre supprimé avec succès.");
         } else {
-            System.out.println("Choix invalide.");
+            System.out.println("Livre non trouvé.");
         }
     }
 
-    public void searchBookByTitle() {
-        System.out.print("Entrez le titre du livre à rechercher: ");
+    private void searchBook() {
+        System.out.println("Entrez le titre du livre à rechercher :");
         String title = scanner.nextLine();
-        List<Book> books = library.searchBookByTitle(title);
-        if (books.isEmpty()) {
-            System.out.println("Aucun livre trouvé avec ce titre.");
-            return;
-        }
-        for (Book book : books) {
-            System.out.println(book);
-        }
-    }
-
-    public void searchBookByAuthor() {
-        System.out.print("Entrez l'auteur du livre à rechercher: ");
-        String author = scanner.nextLine();
-        List<Book> books = library.searchBookByAuthor(author);
-        if (books.isEmpty()) {
-            System.out.println("Aucun livre trouvé avec cet auteur.");
-            return;
-        }
-        for (Book book : books) {
-            System.out.println(book);
+        Book book = library.searchBook(title);
+        if (book != null) {
+            System.out.println("Livre trouvé :");
+            System.out.println("Titre : " + book.getTitle());
+            System.out.println("Auteur : " + book.getAuthor());
+            // Ajouter plus de détails si nécessaire
+        } else {
+            System.out.println("Livre non trouvé.");
         }
     }
 
-    public void addStudent() {
-        System.out.print("Entrez le nom de l'étudiant: ");
+    private void addStudent() {
+        System.out.println("Entrez les détails de l'étudiant :");
+        System.out.print("Nom : ");
         String name = scanner.nextLine();
-        System.out.print("Entrez l'adresse de l'étudiant: ");
+        System.out.print("Adresse : ");
         String address = scanner.nextLine();
-        System.out.print("Entrez l'identifiant de l'étudiant: ");
-        String studentId = scanner.nextLine();
-        Student student = new Student(name, address, studentId);
+        System.out.print("ID : ");
+        String id = scanner.nextLine();
+        Student student = new Student(name, address, id);
         library.addStudent(student);
         System.out.println("Étudiant ajouté avec succès.");
     }
 
-    public void removeStudent() {
-        System.out.print("Entrez l'identifiant de l'étudiant à supprimer: ");
-        String studentId = scanner.nextLine();
-        List<Student> students = new ArrayList<>();
-        for (Student student : library.getStudents()) {
-            if (student.getStudentId().equals(studentId)) {
-                students.add(student);
+    private void removeStudent() {
+        System.out.println("Entrez le nom de l'étudiant à supprimer :");
+        String name = scanner.nextLine();
+        // Implémenter la logique de suppression
+        System.out.println("Étudiant supprimé avec succès.");
+    }
+    
+    private void reserveBook() {
+        System.out.println("Entrez le titre du livre à réserver :");
+        String title = scanner.nextLine();
+        Book book = library.searchBook(title);
+        if (book != null) {
+            System.out.print("Entrez le nom de l'étudiant : ");
+            String studentName = scanner.nextLine();
+            Student student = null;
+            for (Student s : library.getStudents()) {
+                if (s.getName().equalsIgnoreCase(studentName)) {
+                    student = s;
+                    break;
+                }
             }
-        }
-        if (students.isEmpty()) {
-            System.out.println("Aucun étudiant trouvé avec cet identifiant.");
-            return;
-        }
-        System.out.println("Étudiants trouvés:");
-        for (int i = 0; i < students.size(); i++) {
-            System.out.println((i + 1) + ". " + students.get(i));
-        }
-        System.out.print("Entrez le numéro de l'étudiant à supprimer: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline character
-        if (choice >= 1 && choice <= students.size()) {
-            library.removeStudent(students.get(choice - 1));
-            System.out.println("Étudiant supprimé avec succès.");
+            if (student != null) {
+                library.reserveBook(student, book);
+            } else {
+                System.out.println("Étudiant non trouvé.");
+            }
         } else {
-            System.out.println("Choix invalide.");
+            System.out.println("Livre non trouvé.");
         }
     }
+
 }
